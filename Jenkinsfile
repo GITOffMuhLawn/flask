@@ -13,7 +13,7 @@ pipeline {
   stages {
     stage('Git') {
       steps {
-        git(url: 'https://github.com/GITOffMuhLawn/flask', branch: 'main')
+        git(url: 'https://github.com/GITOffMuhLawn/flasky', branch: 'main')
       }
     }
 stage('Build Stage') {
