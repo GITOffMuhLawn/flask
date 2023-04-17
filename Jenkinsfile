@@ -1,30 +1,36 @@
 pipeline {
-  agent any
+    environment {
+        registry = 'jdoyle4/flask_app'
+        registryCredentials = 'docker'
+        cluster_name = 'skillstorm'
+    }
+  agent {
+    node {
+      label 'docker'
+    }
+
+  }
   stages {
     stage('Git') {
       steps {
         git(url: 'https://github.com/GITOffMuhLawn/flask', branch: 'main')
       }
     }
-
-    stage('Build') {
-      steps {
-        sh 'docker build -t jdoyle4/flask_app .'
+stage('Build Stage') {
+    steps {
+        script {
+            dockerImage = docker.build(registry)
+        }
       }
     }
-
-    stage('Docker Login') {
-      steps {
-        sh '''docker login -u jdoyle4 -p dckr_pat_BotKBwwTRBMjJcvmYJtXrNha1vQ
-'''
+stage('Deploy Stage') {
+    steps {
+        script {
+           docker.withRegistry('', registryCredentials) {
+                dockerImage.push()
+            }
+          }
+        }
       }
     }
-
-    stage('Docker Push') {
-      steps {
-        sh 'docker push jdoyle4/flask_app'
-      }
-    }
-
-  }
 }
