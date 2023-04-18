@@ -1,8 +1,9 @@
 pipeline {
     environment {
-        registry = 'jdoyle4/flask_app'
+        registry = 'valeriedarling/flask_app'
         registryCredentials = 'docker'
         cluster_name = 'skillstorm'
+        namespace = 'jdoyle4'
     }
   agent {
     node {
@@ -13,7 +14,7 @@ pipeline {
   stages {
     stage('Git') {
       steps {
-        git(url: 'https://github.com/GITOffMuhLawn/flasky', branch: 'main')
+        git(url: 'https://github.com/valeriedarling/flasky', branch: 'main')
       }
     }
 stage('Build Stage') {
@@ -32,10 +33,9 @@ stage('Deploy Stage') {
           }
         }
       }
-
-      stage('Kubernetes') {
+stage('Kubernetes') {
   steps {
-    withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWS_SECRET_ACCESS_KEY')]) {
+    withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId:'AWS', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
       sh "aws eks update-kubeconfig --region us-east-1 --name ${cluster_name}"
       script{
         try{
@@ -51,5 +51,3 @@ stage('Deploy Stage') {
     }
   }
 }
-    
-    
