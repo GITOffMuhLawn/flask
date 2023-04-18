@@ -14,7 +14,7 @@ pipeline {
   stages {
     stage('Git') {
       steps {
-        git(url: 'https://github.com/valeriedarling/flasky', branch: 'main')
+        git(url: 'https://github.com/GITOffMuhLawn/flasky', branch: 'main')
       }
     }
 stage('Build Stage') {
